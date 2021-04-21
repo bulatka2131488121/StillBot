@@ -87,16 +87,12 @@ def main():
     except:
         pass
 
-async def scheduled(wait_for):
-    while True:
-        await asyncio.sleep(wait_for)
-
-        await bot.send_document(715341565, open(r"D:\\Practice\\text.txt", 'rb'))
-
+async def scheduled():
+    with open(r"text.txt", 'rb') as file:
+        await bot.send_message (715341565, file.read())
+        
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()
-    loop.create_task(scheduled(1))
+    loop.create_task(scheduled())
     executor.start_polling(dp, skip_updates=True)
     main()
-    sys.exit()
-
